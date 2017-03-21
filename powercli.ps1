@@ -54,6 +54,20 @@ cd $vWorkPath
 
 ###################################################
 #
+#  Desc: Get information about esxi hosts.
+#  Tags: #$info, #$get, #$esxi
+#  Note: --
+#
+###################################################
+
+<####
+Get-VMHost -Server $vCenter | ft Name, Version, Parent
+####>
+
+
+
+###################################################
+#
 #  Desc: Get Virtual Machine Name, GuestName and IP.
 #  Tags: #$ip, #$get, #$name
 #  Note: VMtools must be instaled. If VM have multiplie NIC, first NIC address wil be displayed.
