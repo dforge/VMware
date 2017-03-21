@@ -54,15 +54,30 @@ cd $vWorkPath
 
 ###################################################
 #
-#  Desc: Set DomainName on VMhostNetwork
+#  Desc: Remove all standart port groups from hosts in cluster.
+#  Tags: #$posrtgroup, #$network, #$remove
+#  Note: --
+#
+###################################################
+
+<####
+Get-VMHost -Location '<CLUSTER NAME>' | Get-VirtualPortGroup -Standard | Remove-VirtualPortGroup -Confirm:$false
+####>
+
+
+
+
+###################################################
+#
+#  Desc: Set DomainName on VMhostNetwork in cluster.
 #  Tags: #$DomainName, #$network, #$set
 #  Note: --
 #
 ###################################################
 
 <####
-Get-VMHost -Location 'IT-07v3 Laboratory' | Get-VMHostNetwork | Set-VMHostNetwork -DomainName rttv.ru
-Get-VMHost -Location 'IT-07v3 Laboratory' | Get-VMHostNetwork | ft -AutoSize
+Get-VMHost -Location '<CLUSTER NAME>' | Get-VMHostNetwork | Set-VMHostNetwork -DomainName rttv.ru
+Get-VMHost -Location '<CLUSTER NAME>' | Get-VMHostNetwork | ft -AutoSize
 ####>
 
 
