@@ -54,6 +54,21 @@ cd $vWorkPath
 
 ###################################################
 #
+#  Desc: Get Virtual Machine Name, GuestName and IP.
+#  Tags: #$ip, #$get, #$name
+#  Note: VMtools must be instaled. If VM have multiplie NIC, first NIC address wil be displayed.
+#
+###################################################
+
+<####
+Get-VM -Location '<CLUSTER>' | Where-Object {$_.PowerState -eq "PoweredOn"} | ft Name, @{e={$($_.Guest).HostName};l="GuestName"}, @{e={$($_.Guest).IPAddress[0]};l="GuestIP"}
+####>
+
+
+
+
+###################################################
+#
 #  Desc: Get Host hab wwn in cluster.
 #  Tags: #$hba, #$wwn
 #  Note: --
@@ -61,7 +76,7 @@ cd $vWorkPath
 ###################################################
 
 <####
-Get-VMHost -Location 'IT-07v3 Laboratory' | Get-VMHostHBA -Type FibreChannel | Select VMHost,Device,@{N="WWN";E={"{0:X}" -f $_.PortWorldWideName}} | Sort VMhost,Device
+Get-VMHost -Location '<CLUSTER>' | Get-VMHostHBA -Type FibreChannel | Select VMHost,Device,@{N="WWN";E={"{0:X}" -f $_.PortWorldWideName}} | Sort VMhost,Device
 ####>
 
 
