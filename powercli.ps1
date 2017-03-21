@@ -53,8 +53,30 @@ cd $vWorkPath
 #///////////////////////////////////////////////////
 
 
+###################################################
+#
+#  Desc: Check VAAI State in whole DC, show where vaai do not work
+#  Tags: #$vaai, #$dc, #$get
+#
+###################################################
 
+<####
+$vCluster = VMware.VimAutomation.Core\Get-Cluster -Server $vCenter
 
+foreach($vCluster in $vClusters) {
+
+    Write-Host $vCluster.Name –foregroundcolor "Yellow"
+    $vHosts = Get-VMHost -Location $vCluster
+    foreach($vHost in $vHosts) {
+        $hal = (Get-AdvancedSetting -Entity $vHost -Name VMFS3.HardwareAcceleratedLocking).Value
+        $hai = (Get-AdvancedSetting -Entity $vHost -Name DataMover.HardwareAcceleratedInit).Value
+        $ham = (Get-AdvancedSetting -Entity $vHost -Name DataMover.HardwareAcceleratedMove).Value
+        if($hai -ne 1 -and $hal -ne 1 -and $ham -ne 1) {
+            Write-Host $vHost.Name –foregroundcolor "Red"
+        }
+    }
+}
+####>
 
 #///////////////////////////////////////////////////
 
