@@ -6,7 +6,7 @@ clear
 
 ####################################################
 $vModule     = "C:\Program Files (x86)\VMware\Infrastructure\PowerCLI\Modules\"
-$vCenter     = ""
+$vCenter     = Read-Host -Prompt 'Input vCenter server name'
 $vDC         = ""
 $currentDate = get-date -uformat '%d.%m.%y %T'
 $vLogs       = "C:\Docs\logs\$vCenter.$date.log"
@@ -54,6 +54,20 @@ cd $vWorkPath
 
 ###################################################
 #
+#  Desc: Get iSCSI HBA IQN of host in selected cluster.
+#  Tags: #$get, #$iqn
+#  Note: Working for both hba type(software or hardware iscsi). You may change $_.Type for fcoe or something else.
+#
+###################################################
+
+<####
+VMware.VimAutomation.Core\Get-Cluster -Name '<CLUSTER NAME>' | Get-VMhost | Get-VMHostHba | Where {$_.Type -eq 'IScsi'} | ft IScsiName
+####>
+
+
+
+###################################################
+#
 #  Desc: Open virtual machine console
 #  Tags: #$console, #$open
 #  Note: VMware remote console (https://my.vmware.com/web/vmware/details?downloadGroup=VMRC90&productId=491) must be installed.
@@ -63,6 +77,7 @@ cd $vWorkPath
 <####
 VMware.VimAutomation.Core\Get-Cluster -Server $vCenter | VMware.VimAutomation.Core\Get-VM | Where {$_.Name -eq '<FULL VM NAME>'} | Open-VMConsoleWindow
 ####>
+
 
 
 
@@ -78,6 +93,7 @@ VMware.VimAutomation.Core\Get-Cluster -Server $vCenter | VMware.VimAutomation.Co
 VMware.VimAutomation.Core\Get-Cluster "<CLUSTER NAME>" | Get-VMHost | Get-ScsiLun -LunType disk | Where {$_.MultipathPolicy -ne “RoundRobin”} | Set-ScsiLun -MultipathPolicy “RoundRobin”
 VMware.VimAutomation.Core\Get-Cluster "<CLUSTER NAME>" | Get-VMHost | Get-VMHostStorage -RescanAllHba
 ####>
+
 
 
 
@@ -106,7 +122,6 @@ foreach($vCluster in $vClusters) {
     }
 }
 ####>
-
 
 #///////////////////////////////////////////////////
 
