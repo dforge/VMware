@@ -52,11 +52,25 @@ cd $vWorkPath
 
 #///////////////////////////////////////////////////
 
+###################################################
+#
+#  Desc: Set RoundRoubin policy on whole cluster then rescan.
+#  Tags: #$policy, #$set
+#  Note: Warning, this may affect local storage.
+#
+###################################################
+
+<####
+VMware.VimAutomation.Core\Get-Cluster "<CLUSTER NAME>" | Get-VMHost | Get-ScsiLun -LunType disk | Where {$_.MultipathPolicy -ne “RoundRobin”} | Set-ScsiLun -MultipathPolicy “RoundRobin”
+VMware.VimAutomation.Core\Get-Cluster "<CLUSTER NAME>" | Get-VMHost | Get-VMHostStorage -RescanAllHba
+###>
+
 
 ###################################################
 #
 #  Desc: Check VAAI State in whole DC, show where vaai do not work
 #  Tags: #$vaai, #$dc, #$get
+#  Note: --
 #
 ###################################################
 
@@ -77,6 +91,7 @@ foreach($vCluster in $vClusters) {
     }
 }
 ####>
+
 
 #///////////////////////////////////////////////////
 
