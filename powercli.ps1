@@ -54,6 +54,22 @@ cd $vWorkPath
 
 ###################################################
 #
+#  Desc: Set log severity to info and restarting vpxa service.
+#  Tags: #$set, #$vpxa, #$severity
+#  Note: --
+#
+###################################################
+
+<####
+VMware.VimAutomation.Core\Get-VMHost -Server $vCenter | Get-AdvancedSetting -Name Vpx.Vpxa.config.log.level | Set-AdvancedSetting -Value info -Confirm:$false
+VMware.VimAutomation.Core\Get-VMHost -Server $vCenter | Get-VMHostService | where {$_.Key -eq "vpxa"}  | Restart-VMHostService -Confirm:$false
+####>
+
+
+
+
+###################################################
+#
 #  Desc: Get host Name, Cluster and state by name mask (*).
 #  Tags: #$get, #$host, #$mask
 #  Note: --
