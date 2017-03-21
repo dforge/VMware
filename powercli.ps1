@@ -54,6 +54,19 @@ cd $vWorkPath
 
 ###################################################
 #
+#  Desc: Get log bundle from selected host
+#  Tags: #$log, #$get, #$esxi
+#  Note: --
+#
+###################################################
+
+<####
+Get-VMHost -Name <HOSTNAME> | Get-Log -Bundle -DestinationPath $vWorkPath
+####>
+
+
+###################################################
+#
 #  Desc: Get information about esxi hosts.
 #  Tags: #$info, #$get, #$esxi
 #  Note: --
