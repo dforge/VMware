@@ -54,6 +54,23 @@ cd $vWorkPath
 
 ###################################################
 #
+#  Desc: Rescan hba for new datastore in whole vCenter server.
+#  Tags: #$rescan
+#  Note: You may change -Server option to -Name of cluster
+#        fore rescan only in cluster. Also you may delete
+#        get cluster section and add option -Name for Get-VMhost to rescan on single host.
+#
+###################################################
+
+<####
+VMware.VimAutomation.Core\Get-Cluster -Server $vCenter | Get-VMhost | Get-VMHostStorage -RescanVmfs -RescanAllHba -Refresh
+####>
+
+
+
+
+###################################################
+#
 #  Desc: Get iSCSI HBA IQN of host in selected cluster.
 #  Tags: #$get, #$iqn
 #  Note: Working for both hba type(software or hardware iscsi). You may change $_.Type for fcoe or something else.
