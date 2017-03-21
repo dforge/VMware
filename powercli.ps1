@@ -54,13 +54,29 @@ cd $vWorkPath
 
 ###################################################
 #
+#  Desc: Get Host hab wwn in cluster.
+#  Tags: #$hba, #$wwn
+#  Note: --
+#
+###################################################
+
+<####
+Get-VMHost -Location 'IT-07v3 Laboratory' | Get-VMHostHBA -Type FibreChannel | Select VMHost,Device,@{N="WWN";E={"{0:X}" -f $_.PortWorldWideName}} | Sort VMhost,Device
+####>
+
+
+
+###################################################
+#
 #  Desc: Remove all standart port groups from hosts in cluster.
 #  Tags: #$posrtgroup, #$network, #$remove
 #  Note: --
 #
 ###################################################
 
+<####
 Get-VMHost -Location '<CLUSTER NAME>' | Set-VMHostSysLogServer '<SYSLOG SERVER>:<SYSLOG PORT>'
+####>
 
 
 
