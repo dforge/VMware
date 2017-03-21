@@ -60,6 +60,19 @@ cd $vWorkPath
 #
 ###################################################
 
+Get-VMHost -Location '<CLUSTER NAME>' | Set-VMHostSysLogServer '<SYSLOG SERVER>:<SYSLOG PORT>'
+
+
+
+
+###################################################
+#
+#  Desc: Remove all standart port groups from hosts in cluster.
+#  Tags: #$posrtgroup, #$network, #$remove
+#  Note: --
+#
+###################################################
+
 <####
 Get-VMHost -Location '<CLUSTER NAME>' | Get-VirtualPortGroup -Standard | Remove-VirtualPortGroup -Confirm:$false
 ####>
