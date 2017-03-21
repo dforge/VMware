@@ -54,6 +54,20 @@ cd $vWorkPath
 
 ###################################################
 #
+#  Desc: Open virtual machine console
+#  Tags: #$console, #$open
+#  Note: VMware remote console (https://my.vmware.com/web/vmware/details?downloadGroup=VMRC90&productId=491) must be installed.
+#
+###################################################
+
+<####
+VMware.VimAutomation.Core\Get-Cluster -Server $vCenter | VMware.VimAutomation.Core\Get-VM | Where {$_.Name -eq '<FULL VM NAME>'} | Open-VMConsoleWindow
+####>
+
+
+
+###################################################
+#
 #  Desc: Set RoundRoubin policy on whole cluster then rescan.
 #  Tags: #$policy, #$set
 #  Note: Warning, this may affect local storage.
@@ -63,7 +77,8 @@ cd $vWorkPath
 <####
 VMware.VimAutomation.Core\Get-Cluster "<CLUSTER NAME>" | Get-VMHost | Get-ScsiLun -LunType disk | Where {$_.MultipathPolicy -ne “RoundRobin”} | Set-ScsiLun -MultipathPolicy “RoundRobin”
 VMware.VimAutomation.Core\Get-Cluster "<CLUSTER NAME>" | Get-VMHost | Get-VMHostStorage -RescanAllHba
-###>
+####>
+
 
 
 ###################################################
