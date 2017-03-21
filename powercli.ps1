@@ -54,6 +54,21 @@ cd $vWorkPath
 
 ###################################################
 #
+#  Desc: Enter host to maintenance and then reboot.
+#  Tags: #$maintenance, #$reboot
+#  Note: WARNIGN, Make sure that all VM has been migrated from selected host
+#
+###################################################
+
+<####
+Get-VMHost -Name <HOSTNAME> | Set-VMHost -State Maintenance
+Get-VMHost -Name <HOSTNAME> | Restart-VMHost
+####>
+
+
+
+###################################################
+#
 #  Desc: Rescan hba for new datastore in whole vCenter server.
 #  Tags: #$rescan
 #  Note: You may change -Server option to -Name of cluster
