@@ -54,6 +54,20 @@ cd $vWorkPath
 
 ###################################################
 #
+#  Desc: Get host Name, Cluster and state by name mask (*).
+#  Tags: #$get, #$host, #$mask
+#  Note: --
+#
+###################################################
+
+<####
+VMware.VimAutomation.Core\Get-VMHost -Server $vCenter | Where {$_.Name -like '*<NAME PREFIX OF SUFFIX>*'} | Sort-Object Parent -CaseSensitive | ft -Auto Name, Parent, ConnectionState
+####>
+
+
+
+###################################################
+#
 #  Desc: Enter host to maintenance and then reboot.
 #  Tags: #$maintenance, #$reboot
 #  Note: WARNIGN, Make sure that all VM has been migrated from selected host
