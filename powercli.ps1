@@ -54,6 +54,20 @@ cd $vWorkPath
 
 ###################################################
 #
+#  Desc: Get VM by mask name
+#  Tags: #$vm, #$get
+#  Note: --
+#
+###################################################
+
+<####
+Get-VM -Name *<NAME MASK WITH WILDCARD>* | Where-Object {$_.PowerState -eq "PoweredOn"} | ft Name, @{e={$($_.Guest).HostName};l="GuestName"}, @{e={$($_.Guest).IPAddress[0]};l="GuestIP"}
+####>
+
+
+
+###################################################
+#
 #  Desc: Get log bundle from selected host
 #  Tags: #$log, #$get, #$esxi
 #  Note: --
