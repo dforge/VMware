@@ -52,6 +52,56 @@ cd $vWorkPath
 
 #///////////////////////////////////////////////////
 
+
+###################################################
+#
+#  Desc: Execute some powershellcommand on vm over vm tools(using vm tools or something like that).
+#  Tags: #$clone, #$vm
+#  Note: --
+#
+###################################################
+
+<####
+Invoke-VMScript -Confirm -ScriptText '<SOME POWERSHELL COMMAND>' -ScriptType Powershell -VM <VIRTUAL MACHINE NAME>
+####>
+
+
+###################################################
+#
+#  Desc: Clone virtual machine
+#  Tags: #$clone, #$vm
+#  Note: --
+#
+###################################################
+
+#VMware.VimAutomation.Core\New-VM -VM <EXISTING_VM> -Confirm -DiskStorageFormat Thin -DrsAutomationLevel Manual -HAIsolationResponse DoNothing -HARestartPriority Medium -WhatIf
+#VMware.VimAutomation.Core\New-VM -VM <EXISTING_VM> -Confirm -VMHost <HOST> -WhatIf
+#VMware.VimAutomation.Core\New-VM -VM <EXISTING_VM> -Confirm -Name ubuntu1604 -VMHost <HOST>
+
+
+
+###################################################
+#
+#  Desc: Copy Standart port groups from standart VS to another vSwitch with Vlans ID's.
+#  Tags: #$copy, #$vlan
+#  Note: --
+#
+###################################################
+
+<####
+$srcHost = "<SOURCE HOST>"
+$dstHost = "<DESTINATION HOST>"
+$pgs     = Get-VirtualPortGroup -VMHost $srcHost
+$vss     = Get-VirtualSwitch -VMHost $dstHost
+
+foreach($pg in $pgs) {
+    New-VirtualPortGroup -VirtualSwitch $vss -Name $pg.Name -VLanId $pg.VLanId
+}
+####>
+
+
+
+
 ###################################################
 #
 #  Desc: Get VM by mask name
@@ -161,7 +211,7 @@ Get-VMHost -Location '<CLUSTER NAME>' | Get-VirtualPortGroup -Standard | Remove-
 ###################################################
 
 <####
-Get-VMHost -Location '<CLUSTER NAME>' | Get-VMHostNetwork | Set-VMHostNetwork -DomainName rttv.ru
+Get-VMHost -Location '<CLUSTER NAME>' | Get-VMHostNetwork | Set-VMHostNetwork -DomainName <dns domain>
 Get-VMHost -Location '<CLUSTER NAME>' | Get-VMHostNetwork | ft -AutoSize
 ####>
 
@@ -193,7 +243,7 @@ VMware.VimAutomation.Core\Get-VMHost -Server $vCenter | Get-VMHostService | wher
 ###################################################
 
 <####
-VMware.VimAutomation.Core\Get-VMHost -Server $vCenter | Where {$_.Name -like '*<NAME PREFIX OF SUFFIX>*'} | Sort-Object Parent -CaseSensitive | ft -Auto Name, Parent, ConnectionState
+VMware.VimAutomation.Core\Get-VMHost -Server $vCenter | Where {$_.Name -like '*a-9*'} | Sort-Object Name -CaseSensitive | ft -Auto Name, Parent, ConnectionState
 ####>
 
 
