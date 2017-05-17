@@ -52,10 +52,18 @@ cd $vWorkPath
 
 #///////////////////////////////////////////////////
 
+<####
+$vms = Get-VM -Server $vCenter
+$vms.Count
+####>
+
+#Get-VM -Server $vCenter | Where {$_.Name -like '*s-siovm-n0*'} | New-Snapshot -Name b4 -Description "SElinux disabled" -Memory
+#Get-VM -Server $vCenter | Where {$_.Name -like '*s-siovm-n0*'} | VMware.VimAutomation.Core\Set-VM -Snapshot b4 -Confirm
+
 
 ###################################################
 #
-#  Desc: Execute some powershellcommand on vm over vm tools(using vm tools or something like that).
+#  Desc: Execute some powershell command on vm over vm tools(using vm tools or something like that).
 #  Tags: #$clone, #$vm
 #  Note: --
 #
@@ -128,6 +136,8 @@ Get-VM -Name *<NAME MASK WITH WILDCARD>* | Where-Object {$_.PowerState -eq "Powe
 Get-VMHost -Name <HOSTNAME> | Get-Log -Bundle -DestinationPath $vWorkPath
 ####>
 
+#Get-VMHost -Server $vCenter
+
 
 ###################################################
 #
@@ -137,9 +147,20 @@ Get-VMHost -Name <HOSTNAME> | Get-Log -Bundle -DestinationPath $vWorkPath
 #
 ###################################################
 
-<####
-Get-VMHost -Server $vCenter | ft Name, Version, Parent
-####>
+
+#!!!!!!!!!!!!!!!!!!!!!!!!! FIXIT
+
+#Get-VMHost -Server $vCenter | ft Name, Version, Parent
+#Get-VMHost -Server $vCenter | Group-Object -Property ProcessorType
+#Get-VMHost -Server $vCenter | ft -AutoSize
+#$Mem = @{e={[math]::round($_.MemoryTotalGB, 0)};l='Memory'}
+#$Cpu = @{e={$_.ProcessorType.Substring(31, 5)};l='CPU'}
+
+
+#Get-VMHost -Server $vCenter | Where-Object {$_.Name -notlike 's-esxi-c*'} | Where-Object {$_.Name -notlike '10.19*'} |ft Name, Version, $Cpu, $Mem -AutoSize
+
+#Get-VMhost -Name 's-esxi60-j-3-7' | Get-Member
+#Intel(R) Xeon(R) CPU           X5650  @ 2.67GHz
 
 
 
@@ -303,9 +324,8 @@ VMware.VimAutomation.Core\Get-Cluster -Name '<CLUSTER NAME>' | Get-VMhost | Get-
 ###################################################
 
 <####
-VMware.VimAutomation.Core\Get-Cluster -Server $vCenter | VMware.VimAutomation.Core\Get-VM | Where {$_.Name -eq '<FULL VM NAME>'} | Open-VMConsoleWindow
+VMware.VimAutomation.Core\Get-Cluster -Server $vCenter | VMware.VimAutomation.Core\Get-VM | Where {$_.Name -eq '<VIRTUAL_MACHINE_NAME>'} | Open-VMConsoleWindow
 ####>
-
 
 
 
@@ -322,7 +342,18 @@ VMware.VimAutomation.Core\Get-Cluster "<CLUSTER NAME>" | Get-VMHost | Get-ScsiLu
 VMware.VimAutomation.Core\Get-Cluster "<CLUSTER NAME>" | Get-VMHost | Get-VMHostStorage -RescanAllHba
 ####>
 
+#VMware.VimAutomation.Core\Get-Cluster "VDI-4" | Get-VMHost | Get-ScsiLun -LunType disk | Where {$_.MultipathPolicy -ne “RoundRobin”} | Set-ScsiLun -MultipathPolicy “RoundRobin”
 
+#VMware.VimAutomation.Core\Get-VMHost -Server $vCenter | Get-ScsiLun -LunType disk | Where {$_.MultipathPolicy -ne “RoundRobin” -and $_.Vendor -eq 'HP' -and $_.CapacityMB -gt 300000} | ft -AutoSize
+
+#$vHosts = VMware.VimAutomation.Core\Get-VMHost -Server $vCenter
+
+#foreach($vHost in $vHosts) {
+#    Write-Host $vHost.Name
+#    $vHost | Get-ScsiLun -LunType disk | Where {$_.MultipathPolicy -ne “RoundRobin”} | ft -AutoSize 
+#}
+
+#$vhost = s-e
 
 
 ###################################################
