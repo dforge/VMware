@@ -16,9 +16,7 @@ Get-Cluster -name $vCluster | Get-VMHost | Get-VMHostHba -type iscsi | ft IScsiN
 Get-VMHost -Location $vCluster | Get-VMHostHba -type iscsi | New-IScsiHbaTarget -Address $target_address -Port $target_port;
 ```
 
-#### Migrate poweredoff virtaul machines to specified storage and host groups
-#### with removing network adpater (also with write info about network to vm notes)
-#### also remove unwanted virtual machine hardware.
+#### Migrate poweredoff virtaul machines to specified storage and host groups with removing network adpater (also with write info about network to vm notes) also remove unwanted virtual machine hardware.
 ```powershell
 # TODO: Also need tool to migrate vm on storage group only (formally detach mode). It's allow keep vm on separate storage without using standalone separated host.
 #
