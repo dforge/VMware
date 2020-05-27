@@ -2,6 +2,37 @@
 Just uncomment section you needed.
 This repository contains as-is samples, be careful by using on production systems.
 ---
+
+#### Cloning virtual machine with specified guest customizstion file, to forget to enable cloned virtaul machine
+```powershell
+#
+$vm_count               = <INT_CLONNED_VM_COUNT>;
+$source_vm              = '<TEMPLATE_VM>';
+$destination_host       = '<DESTINATION_HOST_NAME>';
+$destination_datastore  = '<DESTINATION_DATASTORE_NAME>';
+$guest_spec             = '<GUEST_SPECIFICATION_NAME>';
+
+
+#
+For ($i=1; $i -lt $vm_count; $i++) {
+    #
+    $clone_name = "w-lab10-00$($i)";
+
+    #
+    $clonnned_vm = New-VM `
+        -VM $source_vm `
+        -Datastore $destination_datastore `
+        -DiskStorageFormat Thin `
+        -DrsAutomationLevel FullyAutomated `
+        -HAIsolationResponse AsSpecifiedByCluster `
+        -HARestartPriority ClusterRestartPriority `
+        -Name $clone_name `
+        -OSCustomizationSpec $guest_spec `
+        -VMHost $destination_host `
+        -RunAsync
+};
+```
+
 #### Adding port-groups from another host to other (source/destination). Acceptable only for standard port group.
 ```powershell
 # 20.04.2015
