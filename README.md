@@ -2,6 +2,20 @@
 Just uncomment section you needed.
 This repository contains as-is samples, be careful by using on production systems.
 ---
+#### Adding port-groups from another host to other (source/destination). Acceptable only for standard port group.
+```powershell
+# 20.04.2015
+$source_hosts       = "<source>";
+$destination_host   = "<destionation>";
+
+$pgs                = Get-VirtualPortGroup -VMHost $source_hosts;
+$vss                = Get-VirtualSwitch -VMHost $destination_host;
+
+foreach($pg in $pgs) {
+    New-VirtualPortGroup -VirtualSwitch $vss -Name $pg.Name -VLanId $pg.VLanId
+};
+```
+
 #### Get iscsi initiator from hosts in specified cluster and add iscsi target to all hosts in specified cluster
 ```powershell
 # 20.04.2014
@@ -17,6 +31,7 @@ Get-VMHost -Location $vCluster | Get-VMHostHba -type iscsi | New-IScsiHbaTarget 
 ```
 
 #### Migrate poweredoff virtaul machines to specified storage and host groups with removing network adpater (also with write info about network to vm notes) also remove unwanted virtual machine hardware.
+
 ```powershell
 # TODO: Also need tool to migrate vm on storage group only (formally detach mode). It's allow keep vm on separate storage without using standalone separated host.
 #
@@ -83,3 +98,4 @@ foreach($vm in $vms) {
     };
 };
 ```
+
