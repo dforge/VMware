@@ -130,3 +130,61 @@ foreach($vm in $vms) {
 };
 ```
 
+#### Get iSCSI HBA IQN of hosts in selected cluster.
+Working for both hba type(software or hardware iscsi). You may change $_.Type for fcoe or something else.
+
+```powershell
+Get-Cluster -Name '<!CLUSTER NAME!>' | Get-VMhost | Get-VMHostHba | Where {$_.Type -eq 'IScsi'} | ft -AutoSize #IScsiName
+```
+
+#### Enter host to Maintenance mode and then reboot.
+Do not forget about vm migration before putin host in maintenance.
+```powershell
+Get-VMHost -Name <HOSTNAME> | Set-VMHost -State Maintenance # Maintenance
+Get-VMHost -Name <HOSTNAME> | Restart-VMHost                # Reboot
+```
+
+#### Set log severity to info-level and restart vpxa service. This option will be applied for every availbable host in vCenter server.
+```powershell
+Get-VMHost -Server <vCenter_SERVER> | Get-AdvancedSetting -Name Vpx.Vpxa.config.log.level | Set-AdvancedSetting -Value info -Confirm:$false
+Get-VMHost -Server <vCenter_SERVER> | Get-VMHostService | where {$_.Key -eq "vpxa"}  | Restart-VMHostService -Confirm:$false
+```
+
+#### Set DomainName on VMhostNetwork in cluster.
+```powershell
+Get-VMHost -Location '<CLUSTER NAME>' | Get-VMHostNetwork | Set-VMHostNetwork -DomainName <dns domain>
+Get-VMHost -Location '<CLUSTER NAME>' | Get-VMHostNetwork | ft -AutoSize
+```
+
+#### Remove all standart port groups from hosts in cluster.
+Why need to do that? When migrating from standard vswitch to distributed vswitch, you may leave an empty port groups, without uplinks and when you will create a new virtual machine you may select a wrong port group.
+Be sure you are migrate vmk interfaces to dvs before execute this.
+```powershell
+Get-VMHost -Location '<CLUSTER NAME>' | Get-VirtualPortGroup -Standard | Remove-VirtualPortGroup -Confirm:$false
+```
+
+#### Configure syslog server on each host in cluster.
+```powershell 
+Get-VMHost -Location '<CLUSTER NAME>' | Set-VMHostSysLogServer '<SYSLOG SERVER>:<SYSLOG PORT>'
+```
+
+#### Get hba wwn for each host in cluster
+```powershell
+Get-VMHost -Location '<CLUSTER NAME>' | Get-VMHostHBA -Type FibreChannel | Select VMHost,Device,@{N="WWN";E={"{0:X}" -f $_.PortWorldWideName}} | Sort VMhost,Device
+```
+
+#### Get poweredon virtual machines in cluster. Select hostname,guest hostname, ip address if vmtools installed.
+VMtools must be instaled for define guest name and IP. If virtual machine have multiplie NICs, first NIC address wil be displayed.
+```powershell
+Get-VM -Location '<CLUSTER>' | Where-Object {$_.PowerState -eq "PoweredOn"} | ft Name, @{e={$($_.Guest).HostName};l="GuestName"}, @{e={$($_.Guest).IPAddress[0]};l="GuestIP"}
+```
+
+#### Get log bundle from selected host
+```powershell
+Get-VMHost -Name <HOSTNAME> | Get-Log -Bundle -DestinationPath <LOG_PATH>
+```
+
+#### Get VM by mask(prefix/suffix/etc...)
+```powershell
+Get-VM -Name *<NAME MASK WITH WILDCARD>* | Where-Object {$_.PowerState -eq "PoweredOn"} | ft Name, @{e={$($_.Guest).HostName};l="GuestName"}, @{e={$($_.Guest).IPAddress[0]};l="GuestIP"}
+```
