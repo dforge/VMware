@@ -188,3 +188,24 @@ Get-VMHost -Name <HOSTNAME> | Get-Log -Bundle -DestinationPath <LOG_PATH>
 ```powershell
 Get-VM -Name *<NAME MASK WITH WILDCARD>* | Where-Object {$_.PowerState -eq "PoweredOn"} | ft Name, @{e={$($_.Guest).HostName};l="GuestName"}, @{e={$($_.Guest).IPAddress[0]};l="GuestIP"}
 ```
+
+#### Set RoundRoubin policy on whole cluster with auto-rescan (Warning, this may affect local storage).
+```powershell
+Get-Cluster "<CLUSTER NAME>" | Get-VMHost | Get-ScsiLun -LunType disk | Where {$_.MultipathPolicy -ne "RoundRobin"} | Set-ScsiLun -MultipathPolicy "RoundRobin"
+Get-Cluster "<CLUSTER NAME>" | Get-VMHost | Get-VMHostStorage -RescanAllHba
+```
+
+#### Open virtual machine console (VMware Remote console requering - https://cutt.ly/lhRGKP3)
+```powershell
+Get-Cluster -Server $vCenter | Get-VM | Where {$_.Name -eq '<VIRTUAL_MACHINE_NAME>'} | Open-VMConsoleWindow
+```
+
+#### Get host iSCSI HBA IQN in selected vCluster
+```powershell
+Get-Cluster -Name '<CLUSTER NAME>' | Get-VMhost | Get-VMHostHba | Where {$_.Type -eq 'IScsi'} | ft IScsiName
+```
+
+#### Rescan hba for new datastore(or changes) on all hosts in vCenter server (Just remove -Server for Get-Cluster and add option -Name for rescan hba on single cluster)
+```powershell
+Get-Cluster -Server $vCenter | Get-VMhost | Get-VMHostStorage -RescanVmfs -RescanAllHba -Refresh
+```
