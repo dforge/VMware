@@ -3,7 +3,7 @@ Just uncomment section you needed.
 This repository contains as-is samples, be careful by using on production systems.
 ---
 
-#### Cloning virtual machine with specified guest customizstion file, to forget to enable cloned virtaul machine
+#### Cloning virtual machine with specified guest customizstion file, do not forget to enable cloned virtaul machine
 ```powershell
 #
 $vm_count               = <INT_CLONNED_VM_COUNT>;
@@ -208,4 +208,9 @@ Get-Cluster -Name '<CLUSTER NAME>' | Get-VMhost | Get-VMHostHba | Where {$_.Type
 #### Rescan hba for new datastore(or changes) on all hosts in vCenter server (Just remove -Server for Get-Cluster and add option -Name for rescan hba on single cluster)
 ```powershell
 Get-Cluster -Server $vCenter | Get-VMhost | Get-VMHostStorage -RescanVmfs -RescanAllHba -Refresh
+```
+
+#### Find virtual machine by MAC Address
+```powershell
+Get-VM | Get-NetworkAdapter | Where {$_.MacAddress -eq "00:50:56:9b:XX:XX"} | Select-Object Parent
 ```
