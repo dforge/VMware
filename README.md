@@ -214,3 +214,9 @@ Get-Cluster -Server $vCenter | Get-VMhost | Get-VMHostStorage -RescanVmfs -Resca
 ```powershell
 Get-VM | Get-NetworkAdapter | Where {$_.MacAddress -eq "00:50:56:9b:XX:XX"} | Select-Object Parent
 ```
+
+#### Add NFS Datastore for all hosts in specified Cluster/DC/Folder
+```powershell
+Get-VMhost -Location <CLUSTER_NAME/DC_NAME/FOLDER> | New-Datastore -Nfs -Name <NFS_DATASTORE_NAME> -Path /<nfs_path> -NfsHost <HFS_HOST_IP>
+```
+
